@@ -15,45 +15,48 @@ import csv
 theta=[]
 phi=[]
 gain=[]
-phase=[]
 thetarad=[]
 phirad=[]
 xcoord=[]
 ycoord=[]
 zcoord=[]
 
-with open('2uan.csv', 'r') as csvfile:
+#adding the data of the first frequency from the csv file to the arrays
+with open('3519run.csv', 'r') as csvfile:
     plots= csv.reader(csvfile, delimiter=',')
+    next(plots, None)
     for row in plots:
-        theta.append(int(row[0]))
-        phi.append(int(row[1]))
-        gain.append(float(row[2]))
-        phase.append(float(row[3]))
-        
+        if row != 0:
+            theta.append(float(row[1]))
+            phi.append(float(row[2]))
+            gain.append(float(row[4]))
 
+theta = theta[:325]
+phi = phi[:325]
+gain = gain[:325]
+
+#converting into radians
 for i in range(len(theta)):
 
         thetarad.append(theta[i]*math.pi/180)
 
         phirad.append(phi[i]*math.pi/180)
         
-        
+#converting the spherical coordinates to cartesian coordinates        
 xcoord = gain*np.sin(thetarad)*np.cos(phirad)
 ycoord = gain*np.sin(thetarad)*np.sin(phirad)
-
-xcoord, ycoord = np.meshgrid(xcoord, ycoord)
-
 zcoord = gain*np.cos(thetarad)
 
-'''EmptySq= np.arange(zcoord).reshape(325,325)
+#converting xcoord, ycoord, and zcoord into 2d arrays
+xcoord, ycoord = np.meshgrid(xcoord, ycoord)
+
+
+EmptySq= np.arange(zcoord).reshape(325,325)
 
 EmptySquare= np.ones((325,325))
 x= (EmptySquare*xcoord)
 y= (EmptySquare*ycoord).T
 
-thetarad= np.array(thetarad).reshape((len(thetarad),1))
-phirad= np.array(phirad).reshape((len(thetarad),1))
-gain= np.array(gain).reshape((len(thetarad),1))'''
 
 fig = plt.figure(figsize=(13,13))
 
@@ -76,3 +79,5 @@ ax_phaseplot.set_ylim()
 plt.savefig('plots')
 
 #added and saved
+
+#this is the most recent version of this code as of 4/3/19
